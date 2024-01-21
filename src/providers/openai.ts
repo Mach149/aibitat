@@ -20,9 +20,10 @@ export type OpenAIProviderConfig = {
   options?: ClientOptions
   /**
    * The model to use for the OpenAI API.
-   * @default 'gpt-3.5-turbo'
+   * @default 'gpt-4-1106-preview'
    */
   model?: OpenAIModel
+  apiKey?: string
 }
 
 /**
@@ -32,6 +33,10 @@ export type OpenAIProviderConfig = {
 export class OpenAIProvider extends Provider<OpenAI> {
   private model: OpenAIModel
   static COST_PER_TOKEN = {
+    'gpt-4-1106-preview': {
+      input: 0.01,
+      output: 0.03,
+    },
     'gpt-4': {
       input: 0.03,
       output: 0.06,
@@ -53,10 +58,11 @@ export class OpenAIProvider extends Provider<OpenAI> {
   constructor(config: OpenAIProviderConfig = {}) {
     const {
       options = {
-        apiKey: process.env.OPENAI_API_KEY,
+        apiKey: config.apiKey || process.env.OPENAI_API_KEY,
         maxRetries: 3,
+        dangerouslyAllowBrowser: true,
       },
-      model = 'gpt-3.5-turbo',
+      model = 'gpt-4-1106-preview',
     } = config
 
     const client = new OpenAI(options)
@@ -74,7 +80,8 @@ export class OpenAIProvider extends Provider<OpenAI> {
    * @returns The completion.
    */
   async complete(
-    messages: OpenAI.ChatCompletionMessageParam[],
+    // messages: OpenAI.ChatCompletionMessageParam[],
+    messages: any[],
     functions?: AIbitat.FunctionDefinition[],
   ): Promise<Provider.Completion> {
     try {

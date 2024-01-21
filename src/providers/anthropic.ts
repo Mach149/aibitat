@@ -23,6 +23,7 @@ export type AnthropicProviderConfig = {
    * @default 'claude-2'
    */
   model?: AnthropicModel
+  apiKey?: string
 }
 
 /**
@@ -35,7 +36,7 @@ export class AnthropicProvider extends Provider<Anthropic> {
   constructor(config: AnthropicProviderConfig = {}) {
     const {
       options = {
-        apiKey: process.env.ANTHROPIC_API_KEY,
+        anthropicApiKey: config.apiKey || process.env.ANTHROPIC_API_KEY,
         maxRetries: 3,
       },
       model = 'claude-2',

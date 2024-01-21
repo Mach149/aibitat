@@ -20,21 +20,23 @@ export type ProviderConfig<T extends Provider = 'openai'> = T extends 'openai'
       provider?: 'openai'
       /** The model to use with the OpenAI */
       model?: Providers.OpenAIProviderConfig['model']
+      apiKey?: Providers.OpenAIProviderConfig['apiKey']
     }
   : T extends 'anthropic'
-  ? {
-      /** The custom AI provider */
-      provider: 'anthropic'
-      /**
-       * The model to use with the Anthropic API.
-       * @default 'claude-2'
-       */
-      model?: Providers.AnthropicProviderConfig['model']
-    }
-  : {
-      /** The custom AI provider */
-      provider: Providers.Provider<unknown>
-    }
+    ? {
+        /** The custom AI provider */
+        provider: 'anthropic'
+        /**
+         * The model to use with the Anthropic API.
+         * @default 'claude-2'
+         */
+        model?: Providers.AnthropicProviderConfig['model']
+        apiKey?: Providers.AnthropicProviderConfig['apiKey']
+      }
+    : {
+        /** The custom AI provider */
+        provider: Providers.Provider<unknown>
+      }
 
 /**
  * Base config for AIbitat agents.
@@ -126,6 +128,7 @@ export type AIbitatProps<T extends Provider> = ProviderConfig<T> & {
    * @default 'NEVER'
    */
   interrupt?: 'NEVER' | 'ALWAYS'
+  apiKey?: string
 }
 
 /**
@@ -570,7 +573,7 @@ export class AIbitat<T extends Provider> {
     // use the GPT-4 because it has a better reasoning
     const provider = this.getProviderForConfig({
       // @ts-expect-error
-      model: 'gpt-4',
+      model: 'gpt-4-1106-preview',
       ...this.defaultProvider,
       ...channelConfig,
     })
@@ -636,7 +639,7 @@ Only return the role.
         ? [
             {
               role: 'user' as const,
-              content: `You are in a whatsapp group. Read the following conversation and then reply. 
+              content: `You are in a room with other people. Read the following conversation (if there is one) and then reply. 
 Do not add introduction or conclusion to your reply because this will be a continuous conversation. Don't introduce yourself.
 
 CHAT HISTORY
@@ -834,9 +837,15 @@ ${this.getHistory({to: route.to})
 
     switch (config.provider) {
       case 'openai':
-        return new Providers.OpenAIProvider({model: config.model})
+        return new Providers.OpenAIProvider({
+          model: config.model,
+          apiKey: config.apiKey,
+        })
       case 'anthropic':
-        return new Providers.AnthropicProvider({model: config.model})
+        return new Providers.AnthropicProvider({
+          model: config.model,
+          apiKey: config.apiKey,
+        })
 
       default:
         throw new Error(
