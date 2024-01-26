@@ -261,7 +261,7 @@ class AIbitat {
       throw new Error(`Agent configuration "${agent}" not found`);
     }
     return {
-      role: "You are a helpful AI assistant.",
+      role: "You are a helpful AI assistant. Respond in language and tone appropriate to your role provided below. It is ok to provide short or long answers depending on the situation. It is also ok to simply [chuckle] or [laugh] if that is the most appropriate response. You can make a joke or respond with a personal story if appropriate.",
       ...config
     };
   }
@@ -454,7 +454,7 @@ Only return the role.
     const chatHistory = this.channels.get(route.to) ? [
       {
         role: "user",
-        content: `You are in a chat room. Read the following conversation (if there is one) and then reply. 
+        content: `You are in a room with other people. Read the following conversation (if there is one) and then reply. 
 Do not add introduction or conclusion to your reply because this will be a continuous conversation. Don't introduce yourself.
 
 CHAT HISTORY

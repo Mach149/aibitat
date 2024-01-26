@@ -230,7 +230,7 @@ export class AIbitat<T extends Provider> {
       throw new Error(`Agent configuration "${agent}" not found`)
     }
     return {
-      role: 'You are a helpful AI assistant.',
+      role: 'You are a helpful AI assistant. Respond in language and tone appropriate to your role provided below. It is ok to provide short or long answers depending on the situation. It is also ok to simply [chuckle] or [laugh] if that is the most appropriate response. You can make a joke or respond with a personal story if appropriate.',
       //       role: `You are a helpful AI assistant.
       // Solve tasks using your coding and language skills.
       // In the following cases, suggest typescript code (in a typescript coding block) or shell script (in a sh coding block) for the user to execute.
